@@ -25,19 +25,22 @@ class WordChainer
   def run(source, target)
     @current_words = [source]
     @all_seen_words = {source => nil}
+    puts "Building library...\n\n"
 
-    until @current_words.empty?
+    until @current_words.empty? || @current_words.include?(target)
       explore_current_words
     end
-
-    p build_path(target)
+    puts "Building path...\n\n"
+    puts build_path(target)
   end
 
   def explore_current_words
     new_current_words = []
 
     @current_words.each do |current_word|
+
       adjacent_words(current_word).each do |adjacent_word|
+
         next if @all_seen_words.keys.include?(adjacent_word)
         new_current_words << adjacent_word
         @all_seen_words[adjacent_word] = current_word
@@ -54,7 +57,8 @@ class WordChainer
       path << @all_seen_words[next_step]
       next_step = @all_seen_words[next_step]
     end
-    path
+
+    path.length == 1 ? "No Path Found" : path
   end
 
 end
@@ -74,6 +78,5 @@ if __FILE__ == $PROGRAM_NAME
 
   chain = WordChainer.new('dictionary.txt')
   chain.run(source, target)
-
 
 end
